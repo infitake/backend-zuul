@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zuul-deployment
+  labels:
+    app: zuul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zuul
+  template:
+    metadata:
+      labels:
+        app: zuul
+    spec:
+      containers:
+      - name: zuul
+        image: zuul:latest
+        ports:
+        - containerPort: 8080

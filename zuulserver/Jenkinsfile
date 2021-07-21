@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+	tools {
+        maven 'mvn'
+        jdk 'jdk11'
+    }
+
+    environment { 
+        registry = 'zuul-server'
+        dockerImage = '' 
+        BRANCH_NAME = env.GIT_BRANCH.replace('product-phase/', '')
+	    registryCredential = 'ecr:us-east-1:my.aws.credentials'
+        ECR_URL = 'https://398842477354.dkr.ecr.us-east-1.amazonaws.com'
+    }
+
+    stages {
+	stage('compile')
+	{
+	   steps{
+		   echo 'compiling zuulserver'
+           echo env.GIT_BRANCH
+	       sh '''cd Services/zuulserver 
+		   mvn compile'''	
+	}
+	}
+	
+	stage('test')
+	{
+		steps{
+			sh '''
+			cd Services/zuulserver 
+			mvn install
+
+			'''
+		}
+	}
+
+
+	stage('install') {
+		steps {
+			sh '''cd Services/zuulserver 
+				mvn install'''	
+		}
+	}
+
+	stage('SonarQube Analysis')
+	{
+		steps{
+			withSonarQubeEnv('sonarqube') {
+				sh '''
+				cd Services/zuulserver 
+				mvn sonar:sonar
+				'''
+			}
+		}
+	}
+
+
+    stage('Building our image') { 
+        when {
+                anyOf {
+                    branch 'master';
+                    branch 'dev';                    
+                }
+        }    
+        steps { 
+                script { 
+                    dir('Services/zuulserver') {
+                    dockerImage = docker.build(registry)
+                    }
+                }
+            } 
+        }
+
+
+
+	stage('deploy image') {
+         when {
+                anyOf {
+                    branch 'master';
+                    branch 'dev';
+                }
+        }    
+		steps {
+                script {
+                    docker.withRegistry(ECR_URL, registryCredential) {
+                        dockerImage.push()
+                    } 
+                    sh  "docker rmi $registry"
+                }
+            }
+		}
+	}
+}
