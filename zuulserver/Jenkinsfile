@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -7,11 +8,10 @@ pipeline {
     }
 
     environment { 
-        registry = 'zuul-server'
+        registry = "sanjeev00/myecr" 
+        registryCredential = 'dockerhub_id' 
         dockerImage = '' 
-        BRANCH_NAME = env.GIT_BRANCH.replace('product-phase/', '')
-	    registryCredential = 'ecr:us-east-1:my.aws.credentials'
-        ECR_URL = 'https://398842477354.dkr.ecr.us-east-1.amazonaws.com'
+        BRANCH_NAME = env.GIT_BRANCH.replace('origin/', '')
     }
 
     stages {
@@ -83,13 +83,14 @@ pipeline {
                 }
         }    
 		steps {
-                script {
-                    docker.withRegistry(ECR_URL, registryCredential) {
-                        dockerImage.push()
-                    } 
-                    sh  "docker rmi $registry"
-                }
-            }
+        	script { 
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push() 
+                    }
+                } 
 		}
 	}
+
+
+    }
 }
