@@ -1,14 +1,17 @@
 package com.eldorado.zuulserver;
 
 import org.apache.log4j.Logger;
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
-import com.eldorado.ZuulFilter.PreFilter;
 
-//import com.eldorado.searchservice.config.LoggingConfig;
+import com.eldorado.zuulserver.config.LoggingConfig;
+import com.eldorado.zuulserver.filter.PreFilter;
+
 
 @EnableEurekaClient
 @EnableZuulProxy

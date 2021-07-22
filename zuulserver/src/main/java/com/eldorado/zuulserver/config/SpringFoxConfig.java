@@ -1,4 +1,4 @@
-package com.eldorado.zuulserver;
+package com.eldorado.zuulserver.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

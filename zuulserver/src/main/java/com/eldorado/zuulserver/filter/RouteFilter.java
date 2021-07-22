@@ -1,17 +1,19 @@
-package com.eldorado.ZuulFilter;
+package com.eldorado.zuulserver.filter;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.*;
+
 
 import org.apache.log4j.Logger;
 import org.slf4j.*;
 import org.springframework.stereotype.Component;
 
-import com.eldorado.zuulserver.LoggingConfig;
+import com.eldorado.zuulserver.config.LoggingConfig;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 
-public class PreFilter extends ZuulFilter
+@Component
+public class RouteFilter extends ZuulFilter
 {
 	Logger log = LoggingConfig.getLog();
 	@Override
@@ -21,14 +23,15 @@ public class PreFilter extends ZuulFilter
 
 	@Override
 	public Object run() throws ZuulException {
-		HttpServletRequest request=RequestContext.getCurrentContext().getRequest();  
-		log.info("request -> {} request uri-> {}"+ request + request.getRequestURI());  
+		RequestContext ctx = RequestContext.getCurrentContext();
+		HttpServletRequest request = ctx.getRequest();
+		log.info("RouteFilter: " + String.format("%s request to %s", request.getMethod(), request.getRequestURL().toString()));
 		return null;
 	}
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return "route";
 	}
 
 	@Override

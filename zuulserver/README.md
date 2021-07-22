@@ -2,7 +2,7 @@
 
 Zuul Server is a gateway application that handles all the requests and does the dynamic routing of microservice applications.Zuul acts as an API gateway or Edge service. It receives all the requests coming from the UI and then delegates the requests to internal microservices.
 
-** Here we have added some Functionility **
+**Here we have added some Functionility**
 1.Swagger
 2.Logger
 3.JaCoCo

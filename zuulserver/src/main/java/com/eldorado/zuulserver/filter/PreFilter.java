@@ -1,18 +1,18 @@
-package com.eldorado.ZuulFilter;
+package com.eldorado.zuulserver.filter;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+
 
 import org.apache.log4j.Logger;
 import org.slf4j.*;
 import org.springframework.stereotype.Component;
 
-import com.eldorado.zuulserver.LoggingConfig;
+import com.eldorado.zuulserver.config.LoggingConfig;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 
-@Component
-public class ErrorFilter extends ZuulFilter
+public class PreFilter extends ZuulFilter
 {
 	Logger log = LoggingConfig.getLog();
 	@Override
@@ -22,14 +22,14 @@ public class ErrorFilter extends ZuulFilter
 
 	@Override
 	public Object run() throws ZuulException {
-		 HttpServletResponse response = RequestContext.getCurrentContext().getResponse();
-		 log.info("ErrorFilter: " + String.format("response status is %d", response.getStatus()));
-		 return null;
+		HttpServletRequest request=RequestContext.getCurrentContext().getRequest();  
+		log.info("request -> {} request uri-> {}"+ request + request.getRequestURI());  
+		return null;
 	}
 
 	@Override
 	public String filterType() {
-		return "error";
+		return "pre";
 	}
 
 	@Override

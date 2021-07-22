@@ -1,12 +1,13 @@
-package com.eldorado.ZuulFilter;
+package com.eldorado.zuulserver.filter;
 
 import javax.servlet.http.*;
+
 
 import org.apache.log4j.Logger;
 import org.slf4j.*;
 import org.springframework.stereotype.Component;
 
-import com.eldorado.zuulserver.LoggingConfig;
+import com.eldorado.zuulserver.config.LoggingConfig;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
